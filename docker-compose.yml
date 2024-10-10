@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:4.4.6
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - MONGO_DB_NAME=${MONGODB_DB}
+      - MONGO_DB_USERNAME=${MONGODB_USER}
+      - MONGO_DB_PASSWORD=${MONGODB_PASS}
+    networks:
+      - petcare-network
+    volumes:
+      - type: volume
+        source: MONGO_DATA
+        target: /data/db
+      - type: volume
+        source: MONGO_CONFIG
+        target: /data/configdb
+
+  api:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_URI=mongodb://${MONGODB_USER}:${MONGODB_PASS}@mongo:27017/${MONGODB_DB}
+      - PORT=4000
+      - NODE_ENV=${NODE_ENV}
+    networks:
+      - petcare-network
+       
+networks:
+  petcare-network:
+    driver: bridge
+
+volumes:
+  MONGO_DATA:
+    name: mongo_data
+  MONGO_CONFIG:
+    name: mongo_config

@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# petcaremanager-backend
-=======
 ## Setup
 
 ### Quick start
@@ -19,7 +16,12 @@ Now you need to create a .env file and set up this variables.
 
 - _PORT_ : Express port to listen.
 - _DB_URI_ : URL to your database.
-- _NODE_ENV_ : To set 
+- _NODE_ENV_ : To set workspace environment.
+- _MONGODB_USER_ : User who has access to write in DB from services.
+- _MONGODB_PASS_ : Password for user.
+- _MONGODB_DB_ : Database name.
+- _MONGODB_ROOT_USERNAME_ : Root user. Only for separate root of service user.
+- _MONGODB_ROOT_PASSWORD_ : Root password.
 
 ### Run server
 
@@ -44,4 +46,3 @@ Run test with coverage
 ```
 npm run test:cov
 ```
->>>>>>> f246fc4 (First commit)
