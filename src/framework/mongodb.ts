@@ -25,7 +25,7 @@ export class MongoService {
 			.then(
 				() => {},
 				(err) => {
-					throw new Error(`Error connecting with mongo: ${err}`);
+					throw new Error(`${err}`);
 				}
 			)
 			.catch((err) => {
