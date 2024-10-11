@@ -6,12 +6,13 @@ erDiagram
     USER {
         String _id PK
         String name
+        String email
+        String password
         String description
         String avatarUrl
         String accessID
         String address
         String role
-        ObjectId[] pets
     }
     ROLE {
         String _id PK
@@ -21,6 +22,7 @@ erDiagram
 
     PET {
         String _id PK
+        String userId FK
         String name
         String breed
         Number age
@@ -33,40 +35,18 @@ erDiagram
         String qrChipImageUrl
         String[] allergies
         String[] illness
-        ObjectId[] foods
-        ObjectId[] medicalHistory
-        ObjectId[] appointments
-        ObjectId[] photos
+        String[] photos
+        ObjectId[] events
     }
-    
-    MEDICALHISTORY {
+    EVENT {
         String _id PK
+        String petId FK
+        String name
         Date date
-        String vaccine
-        String vet
-    }
-
-    APPOINTMENT {
-        String _id PK
-        Date date
-        String vet
-        String reason
-    }
-    PHOTO {
-        String _id PK
-        String url
         String description
     }
-    FOOD {
-        String _id PK
-        String food
-        String foodPurchaseFrequency
-    }
-    USER ||--o{ PET : owns
-    USER ||--o{ ROLE : owns
-    PET ||--o{ MEDICALHISTORY : has
-    PET ||--o{ APPOINTMENT : has
-    PET ||--o{ PHOTO : has
-    PET ||--o{ FOOD : has
+
+    USER ||--|{ ROLE : has
+    PET ||--o{ EVENT : has
 ```
 
