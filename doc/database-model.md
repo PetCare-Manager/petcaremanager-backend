@@ -6,11 +6,20 @@ erDiagram
     USER {
         String _id PK
         String name
-        String googleID
+        String description
+        String avatarUrl
+        String accessID
         String address
-        ObjectId[] dogs
+        String role
+        ObjectId[] pets
     }
-    DOG {
+    ROLE {
+        String _id PK
+        String name
+        String[] permissions
+    }
+
+    PET {
         String _id PK
         String name
         String breed
@@ -25,17 +34,18 @@ erDiagram
         String[] allergies
         String[] illness
         ObjectId[] foods
-        ObjectId[] medical_history
+        ObjectId[] medicalHistory
         ObjectId[] appointments
         ObjectId[] photos
     }
     
-    MEDICAL_HISTORY {
+    MEDICALHISTORY {
         String _id PK
         Date date
         String vaccine
         String vet
     }
+
     APPOINTMENT {
         String _id PK
         Date date
@@ -52,10 +62,11 @@ erDiagram
         String food
         String foodPurchaseFrequency
     }
-    USER ||--o{ DOG : owns
-    DOG ||--o{ MEDICAL_HISTORY : has
-    DOG ||--o{ APPOINTMENT : has
-    DOG ||--o{ PHOTO : has
-    DOG ||--o{ FOOD : has
+    USER ||--o{ PET : owns
+    USER ||--o{ ROLE : owns
+    PET ||--o{ MEDICALHISTORY : has
+    PET ||--o{ APPOINTMENT : has
+    PET ||--o{ PHOTO : has
+    PET ||--o{ FOOD : has
 ```
 
