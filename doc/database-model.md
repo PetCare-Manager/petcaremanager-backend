@@ -5,20 +5,15 @@
 erDiagram
     USER {
         String _id PK
+        String userId
         String name
         String email
         String password
         String description
         String avatarUrl
         String accessID
-        String address
-        String role
     }
-    ROLE {
-        String _id PK
-        String name
-        String[] permissions
-    }
+
 
     PET {
         String _id PK
@@ -46,7 +41,6 @@ erDiagram
         String description
     }
 
-    USER ||--|{ ROLE : has
     PET ||--o{ EVENT : has
 ```
 
