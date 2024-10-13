@@ -38,6 +38,7 @@ export class UserController {
             const userId = req.params.id;
             console.log(userId);
             const user = await this.getUserUseCase.execute(userId);
+            if (!user) throw new Error();
             res.status(200).send(user);
         } catch (error: any) {
             res.status(RestCodes.CODE_BAD_REQUEST).send(
@@ -71,9 +72,7 @@ export class UserController {
         try {
             const userId = req.params.id;
             const user = await this.getUserUseCase.execute(userId);
-            if (!user) {
-                throw new Error();
-            }
+            if (!user) throw new Error();
             await this.deleteUserUseCase.execute(userId);
             res.status(200).send({ message: 'User deleted successfully' });
         } catch (error: any) {
