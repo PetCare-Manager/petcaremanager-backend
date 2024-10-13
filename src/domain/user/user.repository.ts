@@ -1,12 +1,9 @@
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { UserUpdateProps } from './user.value';
 
 export interface UserRepository {
-    createUser(user: UserEntity): Promise<UserEntity | null>;
-    getUserById(userId: string): Promise<UserEntity | null>;
-    updateUser(
-        userId: string,
-        updatedData: UserUpdateProps,
-    ): Promise<UserEntity>;
+    createUser(user: User): Promise<User | null>;
+    getUserById(userId: string): Promise<User | null>;
+    updateUser(userId: string, updatedData: UserUpdateProps): Promise<User>;
     deleteUser(userId: string): Promise<void>;
 }

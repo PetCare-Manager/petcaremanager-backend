@@ -1,7 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
-import { UserEntity } from '../../domain/user/user.entity';
+import { User } from '../../domain/user/user.entity';
 
-export interface IUser extends Document, UserEntity {}
+export interface IUser extends Document, User {}
 
 const userSchema: Schema<IUser> = new Schema(
     {
@@ -32,9 +32,6 @@ const userSchema: Schema<IUser> = new Schema(
         accessId: {
             type: String,
             default: '',
-        },
-        role: {
-            type: String,
         },
     },
     {

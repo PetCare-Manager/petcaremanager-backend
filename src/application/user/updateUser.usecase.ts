@@ -1,5 +1,5 @@
 import { UserUpdateProps } from '../../domain/user/user.value';
-import { UserEntity } from '../../domain/user/user.entity';
+import { User } from '../../domain/user/user.entity';
 import { UserRepository } from '../../domain/user/user.repository';
 
 export class UpdateUserUseCase {
@@ -8,7 +8,7 @@ export class UpdateUserUseCase {
     public execute = async (
         userId: string,
         props: UserUpdateProps,
-    ): Promise<UserEntity> => {
+    ): Promise<User> => {
         return await this.userRepository.updateUser(userId, props);
     };
 }

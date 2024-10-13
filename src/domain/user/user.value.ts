@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 
 export interface UserUpdateProps {
     name?: string;
@@ -7,16 +7,14 @@ export interface UserUpdateProps {
     avatarUrl?: string;
 }
 
-export class UserValue implements UserEntity {
+export class UserValue implements User {
     userId: string;
     name: string;
     email: string;
     password: string;
     description: string;
     avatarUrl: string;
-    address: string;
     accessId: string;
-    role: string; //TODO entity to define
 
     constructor({ email, password }: { email: string; password: string }) {
         this.userId = uuid();
@@ -24,10 +22,8 @@ export class UserValue implements UserEntity {
         this.email = email;
         this.description = '';
         this.avatarUrl = '';
-        this.address = '';
         this.accessId = '';
         this.password = password;
-        this.role = 'user';
     }
 
     updatedetails({ name, description, avatarUrl }: UserUpdateProps) {

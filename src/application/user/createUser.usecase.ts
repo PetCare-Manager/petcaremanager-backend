@@ -1,5 +1,5 @@
 import { UserValue } from '../../domain/user/user.value';
-import { UserEntity } from '../../domain/user/user.entity';
+import { User } from '../../domain/user/user.entity';
 import { UserRepository } from '../../domain/user/user.repository';
 import bcrypt from 'bcrypt';
 
@@ -12,7 +12,7 @@ export class CreateUserUseCase {
     }: {
         email: string;
         password: string;
-    }): Promise<UserEntity | null> => {
+    }): Promise<User | null> => {
         const hashPassword = await bcrypt.hash(password, 10);
         const user = new UserValue({ email, password: hashPassword });
         if (!user) return null;
