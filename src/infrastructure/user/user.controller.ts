@@ -1,57 +1,88 @@
 import { Request, Response } from 'express';
-import { UserUseCase } from '../../application/user/userUseCase';
+import { CustomError, RestCodes } from '../../framework/errorFactory';
+import { UserRepository } from '../../domain/user/user.repository';
+import { CreateUserUseCase } from '../../application/user/createUser.usecase';
+import { GetUserUseCase } from '../../application/user/getUser.usecase';
+import { UpdateUserUseCase } from '../../application/user/updateUser.usecase';
+import { DeleteUserUseCase } from '../../application/user/deleteUser.usecase';
 
 export class UserController {
-    constructor(private userUseCase: UserUseCase) {}
+    private createUserUseCase: CreateUserUseCase;
+    private getUserUseCase: GetUserUseCase;
+    private updateUserUseCase: UpdateUserUseCase;
+    private deleteUserUseCase: DeleteUserUseCase;
+
+    constructor(private userRepository: UserRepository) {
+        this.createUserUseCase = new CreateUserUseCase(userRepository);
+        this.getUserUseCase = new GetUserUseCase(userRepository);
+        this.updateUserUseCase = new UpdateUserUseCase(userRepository);
+        this.deleteUserUseCase = new DeleteUserUseCase(userRepository);
+    }
 
     public createUserCtrl = async (req: Request, res: Response) => {
         try {
-            const user = await this.userUseCase.createUser(req.body);
-            if (!user) {
-                res.status(400).send({ message: 'User not created' });
-            }
+            const user = await this.createUserUseCase.execute(req.body);
             res.status(201).send(user);
-        } catch (error: any) {
-            res.status(500).send({ error: error.message });
+        } catch (error) {
+            res.status(RestCodes.CODE_BAD_REQUEST).send(
+                new CustomError(
+                    'User not created',
+                    RestCodes.CODE_BAD_REQUEST,
+                ).toJson(),
+            );
         }
     };
+
     public getUserCtrl = async (req: Request, res: Response) => {
         try {
             const userId = req.params.id;
             console.log(userId);
-            const user = await this.userUseCase.getDetailsUser(userId);
-            if (!user)
-                return res.status(404).send({ message: 'User not found' });
-            res.send(user);
+            const user = await this.getUserUseCase.execute(userId);
+            res.status(200).send(user);
         } catch (error: any) {
-            res.status(500).send({ error: error.message });
+            res.status(RestCodes.CODE_BAD_REQUEST).send(
+                new CustomError(
+                    'User not found',
+                    RestCodes.CODE_BAD_REQUEST,
+                ).toJson(),
+            );
         }
     };
 
     public updateUserCtrl = async (req: Request, res: Response) => {
         try {
             const userId = req.params.id;
-            const updatedUser = await this.userUseCase.updateUser(
+            const updatedUser = await this.updateUserUseCase.execute(
                 userId,
                 req.body,
             );
-            if (!updatedUser)
-                return res.status(404).send({ message: 'User not found' });
-            res.send(updatedUser);
+            res.status(200).send(updatedUser);
         } catch (error: any) {
-            res.status(500).send({ error: error.message });
+            res.status(RestCodes.CODE_BAD_REQUEST).send(
+                new CustomError(
+                    'User could not be updated',
+                    RestCodes.CODE_BAD_REQUEST,
+                ).toJson(),
+            );
         }
     };
 
     public deleteUserCtrl = async (req: Request, res: Response) => {
         try {
             const userId = req.params.id;
-            const isDeleted = await this.userUseCase.deleteUser(userId);
-            if (!isDeleted)
-                return res.status(404).send({ message: 'User not found' });
-            res.status(204).send();
+            const user = await this.getUserUseCase.execute(userId);
+            if (!user) {
+                throw new Error();
+            }
+            await this.deleteUserUseCase.execute(userId);
+            res.status(200).send({ message: 'User deleted successfully' });
         } catch (error: any) {
-            res.status(500).send({ error: error.message });
+            res.status(RestCodes.CODE_BAD_REQUEST).send(
+                new CustomError(
+                    'User could not be deleted',
+                    RestCodes.CODE_BAD_REQUEST,
+                ).toJson(),
+            );
         }
     };
 }

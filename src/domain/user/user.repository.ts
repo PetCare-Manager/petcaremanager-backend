@@ -7,6 +7,6 @@ export interface UserRepository {
     updateUser(
         userId: string,
         updatedData: UserUpdateProps,
-    ): Promise<UserEntity | null>;
-    deleteUser(userId: string): Promise<boolean>;
+    ): Promise<UserEntity>;
+    deleteUser(userId: string): Promise<void>;
 }
