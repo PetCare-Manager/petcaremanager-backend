@@ -2,7 +2,6 @@ import { UserRepository } from '../../domain/user/user.repository';
 import { User } from '../../domain/user/user.entity';
 import UserModel from './user.model';
 import { UserUpdateProps } from '../../domain/user/user.value';
-import { CustomError, RestCodes } from '../../framework/errorFactory';
 
 export class MongoRepository implements UserRepository {
     async createUser(user: Partial<User>): Promise<User | null> {
@@ -26,10 +25,7 @@ export class MongoRepository implements UserRepository {
             { new: true },
         ).lean();
         if (!updatedUser) {
-            throw new CustomError(
-                `User with userId ${userId} not found.`,
-                RestCodes.CODE_BAD_REQUEST,
-            );
+            throw new Error(`User with userId ${userId} not found.`);
         }
         return updatedUser;
     }

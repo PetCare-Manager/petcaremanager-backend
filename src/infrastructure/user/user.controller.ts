@@ -22,12 +22,22 @@ export class UserController {
     public createUserCtrl = async (req: Request, res: Response) => {
         try {
             const user = await this.createUserUseCase.execute(req.body);
+            if (!user) {
+                return res
+                    .status(RestCodes.CODE_BAD_REQUEST)
+                    .send(
+                        new CustomError(
+                            'User not created',
+                            RestCodes.CODE_BAD_REQUEST,
+                        ).toJson(),
+                    );
+            }
             res.status(201).send(user);
         } catch (error) {
-            res.status(RestCodes.CODE_BAD_REQUEST).send(
+            res.status(500).send(
                 new CustomError(
-                    'User not created',
-                    RestCodes.CODE_BAD_REQUEST,
+                    'Internal server error',
+                    RestCodes.INTERNAL_SERVER_ERROR,
                 ).toJson(),
             );
         }
@@ -36,15 +46,23 @@ export class UserController {
     public getUserCtrl = async (req: Request, res: Response) => {
         try {
             const userId = req.params.id;
-            console.log(userId);
             const user = await this.getUserUseCase.execute(userId);
-            if (!user) throw new Error();
+            if (!user) {
+                return res
+                    .status(RestCodes.CODE_NO_CONTENT)
+                    .send(
+                        new CustomError(
+                            'User not found',
+                            RestCodes.CODE_NO_CONTENT,
+                        ).toJson(),
+                    );
+            }
             res.status(200).send(user);
         } catch (error: any) {
-            res.status(RestCodes.CODE_BAD_REQUEST).send(
+            res.status(500).send(
                 new CustomError(
-                    'User not found',
-                    RestCodes.CODE_BAD_REQUEST,
+                    'Internal server error',
+                    RestCodes.INTERNAL_SERVER_ERROR,
                 ).toJson(),
             );
         }
@@ -59,10 +77,18 @@ export class UserController {
             );
             res.status(200).send(updatedUser);
         } catch (error: any) {
-            res.status(RestCodes.CODE_BAD_REQUEST).send(
+            if (error.message.includes('not found')) {
+                res.status(RestCodes.CODE_BAD_REQUEST).send(
+                    new CustomError(
+                        'User could not be updated',
+                        RestCodes.CODE_BAD_REQUEST,
+                    ).toJson(),
+                );
+            }
+            res.status(500).send(
                 new CustomError(
-                    'User could not be updated',
-                    RestCodes.CODE_BAD_REQUEST,
+                    'Internal server error',
+                    RestCodes.INTERNAL_SERVER_ERROR,
                 ).toJson(),
             );
         }
@@ -72,14 +98,21 @@ export class UserController {
         try {
             const userId = req.params.id;
             const user = await this.getUserUseCase.execute(userId);
-            if (!user) throw new Error();
+            if (!user) {
+                res.status(RestCodes.CODE_NO_CONTENT).send(
+                    new CustomError(
+                        'User not found',
+                        RestCodes.CODE_NO_CONTENT,
+                    ).toJson(),
+                );
+            }
             await this.deleteUserUseCase.execute(userId);
             res.status(200).send({ message: 'User deleted successfully' });
         } catch (error: any) {
-            res.status(RestCodes.CODE_BAD_REQUEST).send(
+            res.status(500).send(
                 new CustomError(
-                    'User could not be deleted',
-                    RestCodes.CODE_BAD_REQUEST,
+                    'Internal server error',
+                    RestCodes.INTERNAL_SERVER_ERROR,
                 ).toJson(),
             );
         }

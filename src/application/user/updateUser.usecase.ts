@@ -1,5 +1,5 @@
 import { UserUpdateProps } from '../../domain/user/user.value';
-import { User } from '../../domain/user/user.entity';
+import { UserPresenter } from '../../domain/user/user.presenter';
 import { UserRepository } from '../../domain/user/user.repository';
 
 export class UpdateUserUseCase {
@@ -8,7 +8,10 @@ export class UpdateUserUseCase {
     public execute = async (
         userId: string,
         props: UserUpdateProps,
-    ): Promise<User> => {
-        return await this.userRepository.updateUser(userId, props);
+    ): Promise<UserPresenter | null> => {
+        const updatedUser = await this.userRepository.updateUser(userId, props);
+        if (!updatedUser) return null;
+
+        return new UserPresenter(updatedUser);
     };
 }
